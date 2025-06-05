@@ -12,6 +12,7 @@ namespace PocketZoneTest
         void AddItem(InventoryItemDataModel item);
         int AddItem(ItemData item, int quantity);
         void DeleteItem(int itemID, int amount);
+        void DeleteItem(int itemID, DeleteMode deleteMode);
         void DeleteItem(InventoryItemDataModel item);
         Dictionary<int, InventoryItemDataModel> GetCurrentInventoryState();
         InventoryItemDataModel GetItemByID(int itemID);

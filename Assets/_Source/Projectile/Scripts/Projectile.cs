@@ -29,14 +29,14 @@ public class Projectile : MonoBehaviour, ILaunchable
             {
                 gameObject.SetActive(false);
             }
-            transform.position += (Vector3)(_direction * _launchSpeed * Time.deltaTime);
+            transform.position += (Vector3)(_launchSpeed * Time.deltaTime * _direction);
             CheckForCollisions();
         }
     }
 
     private void CheckForCollisions()
     {
-        Vector2 forwardRaycastOrigin = (Vector2)transform.position + _direction * _raycastDistance * 0.2f;
+        Vector2 forwardRaycastOrigin = (Vector2)transform.position + _raycastDistance * 0.2f * _direction;
         RaycastHit2D forwardHit = Physics2D.Raycast(forwardRaycastOrigin, _direction, _raycastDistance, _enemyLayer);
 
         if (forwardHit.collider != null)
@@ -50,7 +50,7 @@ public class Projectile : MonoBehaviour, ILaunchable
             return;
         }
 
-        Vector2 backwardRaycastOrigin = (Vector2)transform.position - _direction * _raycastDistance * 0.2f;
+        Vector2 backwardRaycastOrigin = (Vector2)transform.position - _raycastDistance * 0.2f * _direction;
         RaycastHit2D backwardHit = Physics2D.Raycast(backwardRaycastOrigin, -_direction, _raycastDistance, _enemyLayer);
 
         if (backwardHit.collider != null)

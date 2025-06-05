@@ -82,7 +82,7 @@ namespace PocketZoneTest
             {
                 for (int i = 0; i < _inventoryItems.Count; i++)
                 {
-                    while (quantity > 0 && !IsInventoryFull())
+                    while (quantity > 0 && !IsInventoryHasFreeSlot())
                     {
                         quantity -= AddItemToFirstFreeSlot(item, 1);
                     }
@@ -112,7 +112,14 @@ namespace PocketZoneTest
         }
 
         public bool IsInventoryFull()
-        => !_inventoryItems.Where(item => item.IsEmpty).Any();
+        => !_inventoryItems.Any(
+               item => item.IsEmpty
+               || !item.IsEmpty
+               && item.quantity < item.item.MaxStackSize
+               );
+
+        private bool IsInventoryHasFreeSlot()
+        => !_inventoryItems.Any(item => item.IsEmpty);
 
         private int AddStackableItem(ItemData item, int quantity)
         {
@@ -141,7 +148,7 @@ namespace PocketZoneTest
                 }
             }
 
-            while (quantity > 0 && !IsInventoryFull())
+            while (quantity > 0 && !IsInventoryHasFreeSlot())
             {
                 int newQuantity = Mathf.Clamp(quantity, 0, item.MaxStackSize);
                 quantity -= newQuantity;
@@ -177,6 +184,24 @@ namespace PocketZoneTest
         {
             var findedItem = _inventoryItems.IndexOf(item);
             DeleteItem(findedItem, 1);
+        }
+
+        public void DeleteItem(int itemID, DeleteMode deleteMode)
+        {
+            switch (deleteMode)
+            {
+                case DeleteMode.Single:
+                    DeleteItem(itemID, 1); 
+                    break;
+
+                case DeleteMode.Full:
+                    DeleteItem(itemID, _inventoryItems[itemID].quantity);
+                    break;
+
+                default:
+                    DeleteItem(itemID, 1);
+                    break;
+            }
         }
 
         public Dictionary<int, InventoryItemDataModel> GetCurrentInventoryState()
@@ -254,5 +279,7 @@ namespace PocketZoneTest
                 && itemInInventory.item.ID == item.ID)
                 .Sum(itemInInventory => itemInInventory.quantity);
         }
+
+
     }
 }

@@ -25,6 +25,7 @@ namespace PocketZoneTest
             Deselect();
         }
 
+        public bool IsEmpty => _isEmpty;
 
         public void ResetData()
         {
@@ -41,7 +42,15 @@ namespace PocketZoneTest
         {
             _itemImage.gameObject.SetActive(true);
             _itemImage.sprite = sprite;
-            _quantityText.text = quantity.ToString();
+            if (quantity == 1)
+            {
+                _quantityText.enabled = false;
+            }
+            else
+            {
+                _quantityText.enabled = true;
+                _quantityText.text = quantity.ToString();
+            }
             _isEmpty = false;
         }
 

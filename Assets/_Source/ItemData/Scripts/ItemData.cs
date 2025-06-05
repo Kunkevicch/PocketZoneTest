@@ -6,7 +6,7 @@ namespace PocketZoneTest
     [CreateAssetMenu(fileName = "ItemData", menuName = "Configs/Item Data")]
     public class ItemData : ScriptableObject
     {
-        [SerializeField, HideInInspector] private string _id;
+        private string _id;
 
         public string ID => _id;
 

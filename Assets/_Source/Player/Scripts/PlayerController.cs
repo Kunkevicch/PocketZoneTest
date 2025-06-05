@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using Zenject;
 
@@ -55,7 +52,6 @@ namespace PocketZoneTest
         {
             _isActive = true;
 
-            _input.MoveToDirection += OnMoveToDirection;
             _input.Fire += OnFire;
             _health.Dead += OnDead;
 
@@ -65,7 +61,6 @@ namespace PocketZoneTest
 
         private void OnDisable()
         {
-            _input.MoveToDirection -= OnMoveToDirection;
             _input.Fire -= OnFire;
             _health.Dead -= OnDead;
 
@@ -73,31 +68,39 @@ namespace PocketZoneTest
             _eventMediator.RemoveListener<EnemyOutSightEvent>(OnEnemyOutSight);
         }
 
-        private void OnMoveToDirection(Vector2 direction)
+        private void Update()
+        {
+            MoveToDirection(_input.InputDirection);
+        }
+
+        private void MoveToDirection(Vector2 direction)
         {
             if (!_isActive)
                 return;
 
-            if (direction != Vector2.zero || IsEnemyInSight)
+            if (direction != Vector2.zero)
             {
                 if (!IsEnemyInSight)
                 {
                     RotateToDirection(direction);
                     RotateShoulderToDirection(direction);
                 }
-                else
-                {
-                    Vector3 directionToClosestEnemy = GetDirectionToClosestEnemy();
-                    RotateToDirection(directionToClosestEnemy);
-                    RotateShoulderToDirection(directionToClosestEnemy);
-                }
 
                 _animator.PlayMove();
             }
             else
             {
+
                 _animator.PlayIdle();
             }
+
+            if (IsEnemyInSight)
+            {
+                Vector3 directionToClosestEnemy = GetDirectionToClosestEnemy();
+                RotateToDirection(directionToClosestEnemy);
+                RotateShoulderToDirection(directionToClosestEnemy);
+            }
+
             _mover.MoveProcess(direction, _moveSpeed);
         }
 

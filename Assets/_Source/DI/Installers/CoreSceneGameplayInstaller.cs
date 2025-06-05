@@ -1,11 +1,14 @@
 using PocketZoneTest;
+using UnityEngine;
 using Zenject;
 
 public class CoreSceneGameplayInstaller : MonoInstaller
 {
-    [UnityEngine.SerializeField] private ObjectForPooling _objectsForPooling;
-    [UnityEngine.SerializeField] private int _inventorySize;
-    [UnityEngine.SerializeField] private AvailableItem _availableItems;
+    [SerializeField] private ObjectForPooling _objectsForPooling;
+    [SerializeField] private int _inventorySize;
+    [SerializeField] private AvailableItem _availableItems;
+    [SerializeField] private GameObject _playerPrefab;
+
     public override void InstallBindings()
     {
         BindlSystem();
@@ -38,7 +41,7 @@ public class CoreSceneGameplayInstaller : MonoInstaller
     {
         Container
             .BindInterfacesAndSelfTo<Player>()
-            .FromComponentInHierarchy()
+            .FromComponentInNewPrefab(_playerPrefab)
             .AsSingle()
             .NonLazy();
 

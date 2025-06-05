@@ -8,7 +8,7 @@ namespace PocketZoneTest
         private readonly IInventoryView _inventoryView;
         private readonly IInventoryModel _inventoryModel;
         private readonly IInput _input;
-        private readonly int _inventorySize = 10;
+        private readonly int _inventorySize;
 
         private bool _isInventoryOpened;
 
@@ -75,7 +75,6 @@ namespace PocketZoneTest
 
         private void OnInventoryChanged()
         {
-            SaveDataInventory saveData = new();
             _inventoryView.ResetAllItems();
             var currentInventoryState = _inventoryModel.GetCurrentInventoryState();
 
@@ -83,6 +82,7 @@ namespace PocketZoneTest
             {
                 _inventoryView.UpdateData(keyPair.Key, keyPair.Value.item.Image, keyPair.Value.quantity);
             }
+
             InventoryChanged?.Invoke();
         }
 
@@ -108,9 +108,11 @@ namespace PocketZoneTest
             _inventoryView.CreateDraggedItem(inventoryItemDataModel.item.Image, inventoryItemDataModel.quantity);
         }
 
-        private void OnItemSwapped(int firstItemID, int secondItemID) => _inventoryModel.SwapItems(firstItemID, secondItemID);
+        private void OnItemSwapped(int firstItemID, int secondItemID) 
+        => _inventoryModel.SwapItems(firstItemID, secondItemID);
 
-        private void OnItemDeleteRequested(int itemID) => _inventoryModel.DeleteItem(itemID, 1);
+        private void OnItemDeleteRequested(int itemID) 
+        => _inventoryModel.DeleteItem(itemID, DeleteMode.Full);
 
         private void OnSwitchInventoryState()
         {

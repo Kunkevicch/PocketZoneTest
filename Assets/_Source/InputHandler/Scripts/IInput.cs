@@ -5,8 +5,9 @@ namespace PocketZoneTest
 {
     public interface IInput
     {
-        public event Action<Vector2> MoveToDirection;
         public event Action Fire;
         public event Action SwitchInventoryState;
+
+        public Vector2 InputDirection { get; }
     }
 }

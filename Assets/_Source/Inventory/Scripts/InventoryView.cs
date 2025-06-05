@@ -13,25 +13,9 @@ namespace PocketZoneTest
         [SerializeField] private InventoryPointerFollow _inventoryPointerFollow;
         [SerializeField] private Button _deleteBtn;
 
-        private List<InventoryItem> _listOfUIItems = new();
+        private readonly List<InventoryItem> _listOfUIItems = new();
 
         private int _currentSelectedItemID = -1;
-
-        private void Awake()
-        {
-            _inventoryPointerFollow.Toggle(false);
-            _description.ResetDescription();
-        }
-
-        private void OnEnable()
-        {
-            _deleteBtn.onClick.AddListener(OnDeleteBtnClicked);
-        }
-
-        private void OnDisable()
-        {
-            _deleteBtn.onClick.RemoveListener(OnDeleteBtnClicked);
-        }
 
         public void InitializeInventoryUI(int inventorySize)
         {
@@ -51,6 +35,22 @@ namespace PocketZoneTest
         public event Action<int> StartDragging;
         public event Action<int, int> ItemsSwapped;
         public event Action<int> ItemDeleteRequested;
+
+        private void Awake()
+        {
+            _inventoryPointerFollow.Toggle(false);
+            _description.ResetDescription();
+        }
+
+        private void OnEnable()
+        {
+            _deleteBtn.onClick.AddListener(OnDeleteBtnClicked);
+        }
+
+        private void OnDisable()
+        {
+            _deleteBtn.onClick.RemoveListener(OnDeleteBtnClicked);
+        }
 
         public void UpdateData(int itemIndex, Sprite itemImage, int itemQuantity)
         {
@@ -141,10 +141,10 @@ namespace PocketZoneTest
 
         public void ResetAllItems()
         {
-            foreach (var item in _listOfUIItems)
+            foreach (InventoryItem inventoryItem in _listOfUIItems)
             {
-                item.ResetData();
-                item.Deselect();
+                inventoryItem.ResetData();
+                inventoryItem.Deselect();
             }
         }
 
@@ -164,8 +164,10 @@ namespace PocketZoneTest
             if (_currentSelectedItemID == -1)
                 return;
 
+
             _deleteBtn.gameObject.SetActive(false);
             ResetSelection();
+
             ItemDeleteRequested?.Invoke(_currentSelectedItemID);
         }
     }
